@@ -9,10 +9,9 @@ type AddingState = { date: string; title: string; type: 'sprint' | 'global' | 'm
 
 export function Calendar() {
   const { events, addEvent } = useCalendarStore()
-  const [cursor, setCursor] = useState(new Date(2026, 4, 1))
+  const [cursor, setCursor] = useState(() => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1) })
   const [adding, setAdding] = useState<AddingState | null>(null)
-  const [hover, setHover] = useState<{ iso: string; evs: typeof events } | null>(null)
-  const today = new Date(2026, 4, 19)
+  const today = new Date()
 
   const y = cursor.getFullYear()
   const m = cursor.getMonth()
@@ -44,8 +43,6 @@ export function Calendar() {
     addEvent({ date: adding.date, title: adding.title, type: adding.type })
     setAdding(null)
   }
-
-  void hover
 
   return (
     <div className="content">
@@ -94,9 +91,7 @@ export function Calendar() {
           return (
             <div key={i}
                  className={`cal-cell ${inMonth ? '' : 'outside'} ${isToday ? 'today' : ''}`}
-                 onClick={() => onCellClick(dt)}
-                 onMouseEnter={() => evs.length ? setHover({ iso, evs }) : undefined}
-                 onMouseLeave={() => setHover(null)}>
+                 onClick={() => onCellClick(dt)}>
               <div className="daynum">{dt.getDate()}</div>
               {evs.slice(0, 3).map(e => (
                 <div key={e.id} className={`cal-event ${e.type}`}>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useNotesStore } from '../../store/notesStore'
 import { I } from '../../components/ui/Icon'
 
@@ -6,16 +6,12 @@ export function Notes() {
   const { notes, updateNote, newNote, deleteNote } = useNotesStore()
   const [selId, setSelId] = useState<string | null>(notes[0]?.id || null)
   const [q, setQ] = useState('')
-  const [savedAt, setSavedAt] = useState<number | null>(null)
-  const saveTimer = useRef<ReturnType<typeof setTimeout>>(null)
 
   const filtered = notes.filter(n => !q || n.title.toLowerCase().includes(q.toLowerCase()) || n.body.toLowerCase().includes(q.toLowerCase()))
   const sel = notes.find(n => n.id === selId)
 
   const handleUpdate = (id: string, body: string) => {
     updateNote(id, body)
-    if (saveTimer.current) clearTimeout(saveTimer.current)
-    saveTimer.current = setTimeout(() => setSavedAt(Date.now()), 500)
   }
 
   const handleNew = () => {
@@ -28,8 +24,6 @@ export function Notes() {
     if (id === selId) setSelId(rest[0]?.id || null)
     deleteNote(id)
   }
-
-  void savedAt
 
   const relTime = (ts: number) => {
     const diff = Date.now() - ts

@@ -114,7 +114,7 @@ export function Links() {
                 <div className="link-url">{l.url}</div>
                 <div style={{marginTop: 8, display: 'flex', gap: 6, alignItems: 'center'}}>
                   <span className="badge gray">{l.cat}</span>
-                  <a className="btn ghost sm" style={{padding: '2px 6px'}}>Open <I.External size={11}/></a>
+                  <a className="btn ghost sm" href={l.url} target="_blank" rel="noreferrer" style={{padding: '2px 6px'}}>Open <I.External size={11}/></a>
                 </div>
               </div>
               <div className="link-actions">

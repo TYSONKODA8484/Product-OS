@@ -86,7 +86,7 @@ function CellCheckbox({ checked, onChange }: { checked: boolean; onChange: (v: b
 
 function PackEditDrawer({ row, onClose, onUpdate }: { row: PackRow; onClose: () => void; onUpdate: (patch: Partial<PackRow>) => void }) {
   const toast = useToast()
-  const update = (patch: Partial<PackRow>) => { onUpdate(patch); toast('Saved') }
+  const update = (patch: Partial<PackRow>) => { onUpdate(patch) }
   return (
     <>
       <div className="drawer-overlay" onClick={onClose}/>
@@ -154,7 +154,7 @@ function PackEditDrawer({ row, onClose, onUpdate }: { row: PackRow; onClose: () 
           <div style={{flex: 1, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)'}}>
             <I.Check size={12} style={{color: 'var(--teal)'}}/> Auto-saving
           </div>
-          <button className="btn primary" onClick={onClose}>Done</button>
+          <button className="btn primary" onClick={() => { toast('Saved'); onClose() }}>Done</button>
         </div>
       </div>
     </>
@@ -331,11 +331,11 @@ export function Pack() {
         ))}
       </div>
 
-      {editId && (
+      {editId && rows.find(r => r.id === editId) && (
         <PackEditDrawer
-          row={rows.find(r => r.id === editId)!}
+          row={rows.find(r => r.id === editId) ?? rows[0]}
           onClose={() => setEditId(null)}
-          onUpdate={patch => { updateRow(editId, patch); toast('Saved') }}
+          onUpdate={patch => updateRow(editId, patch)}
         />
       )}
     </div>

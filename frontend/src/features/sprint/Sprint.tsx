@@ -323,9 +323,9 @@ export function Sprint() {
         })}
       </div>
 
-      {open && (
+      {open && sprints.find(s => s.id === open) && (
         <SprintDrawer
-          sprint={sprints.find(s => s.id === open)!}
+          sprint={sprints.find(s => s.id === open) ?? sprints[0]}
           onClose={() => setOpen(null)}
           onUpdate={patch => updateSprint(open, patch)}
         />
