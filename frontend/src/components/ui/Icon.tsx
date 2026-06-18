@@ -7,11 +7,13 @@ interface IconProps {
   stroke?: string
   sw?: number
   children?: React.ReactNode
+  style?: React.CSSProperties
+  className?: string
 }
 
-const IconBase = ({ d, size = 16, fill = 'none', stroke = 'currentColor', sw = 1.75, children }: IconProps) => (
-  <svg className="icon" width={size} height={size} viewBox="0 0 24 24" fill={fill}
-       stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
+const IconBase = ({ d, size = 16, fill = 'none', stroke = 'currentColor', sw = 1.75, children, style, className }: IconProps) => (
+  <svg className={`icon${className ? ' ' + className : ''}`} width={size} height={size} viewBox="0 0 24 24" fill={fill}
+       stroke={stroke} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" style={style}>
     {d ? <path d={d}/> : children}
   </svg>
 )

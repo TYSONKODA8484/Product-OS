@@ -25,7 +25,7 @@ interface NotesState {
 
 export const useNotesStore = create<NotesState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       notes: SAMPLE_NOTES,
       updateNote: (id, body) => set((s) => ({
         notes: s.notes.map(n => {
