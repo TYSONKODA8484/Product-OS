@@ -15,7 +15,7 @@ export interface Sprint {
   prd: string
 }
 
-const SPRINTS: Sprint[] = [
+export const SPRINTS: Sprint[] = [
   { id: 's1', feature: 'Background remover v2', app: 'LightX', platforms: ['iOS', 'Android'], stage: 'Dev', status: 'Current', eta: 'May 28', blocker: '', jira: 'PROJ-2841', review: 'PROJ-2841-R', prd: 'doc/prd-bg-v2' },
   { id: 's2', feature: 'Onboarding redesign', app: 'AI Leap', platforms: ['iOS'], stage: 'Design', status: 'Current', eta: 'May 24', blocker: 'Waiting on illustrations', jira: 'PROJ-2812', review: '', prd: 'doc/onboard-r2' },
   { id: 's3', feature: 'Subscription paywall A/B', app: 'Photocut', platforms: ['iOS', 'Android', 'Web'], stage: 'QA', status: 'Current', eta: 'May 22', blocker: '', jira: 'PROJ-2855', review: 'PROJ-2855-R', prd: 'doc/paywall-ab' },

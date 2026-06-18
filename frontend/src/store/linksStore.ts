@@ -8,7 +8,7 @@ export interface Link {
   cat: string
 }
 
-const SAMPLE_LINKS: Link[] = [
+export const SAMPLE_LINKS: Link[] = [
   { id: 'l1', name: 'Product Roadmap (Master)', url: 'docs.example.com/p/roadmap-master', cat: 'Docs' },
   { id: 'l2', name: 'Q3 Planning Sheet', url: 'sheets.example.com/q3-plan', cat: 'Sheets' },
   { id: 'l3', name: 'JIRA — Active Sprint', url: 'jira.example.com/sprint/active', cat: 'JIRA' },

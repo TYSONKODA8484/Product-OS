@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useSprintsStore } from './sprintsStore'
+import { useSprintsStore, SPRINTS } from './sprintsStore'
 
 describe('sprintsStore', () => {
   beforeEach(() => {
     localStorage.clear()
-    useSprintsStore.setState({ sprints: useSprintsStore.getState().sprints })
+    useSprintsStore.setState({ sprints: SPRINTS })
   })
 
   it('cycles status Current -> Next -> Done -> Current', () => {
