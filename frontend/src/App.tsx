@@ -13,6 +13,9 @@ import { Notes } from './features/notes/Notes'
 import { AIAssistant } from './features/ai-assistant/AIAssistant'
 import { Links } from './features/links/Links'
 import { Settings } from './features/settings/Settings'
+import { GAImplementation } from './features/ga/GAImplementation'
+import { Deeplinks } from './features/deeplinks/Deeplinks'
+import { Tasks } from './features/tasks/Tasks'
 
 export default function App() {
   const { theme, sidebarCollapsed } = useUiStore()
@@ -49,6 +52,9 @@ export default function App() {
             <Route path="/ai" element={<AIAssistant/>}/>
             <Route path="/links" element={<Links/>}/>
             <Route path="/settings" element={<Settings/>}/>
+            <Route path="/ga" element={<GAImplementation/>}/>
+            <Route path="/deeplinks" element={<Deeplinks/>}/>
+            <Route path="/tasks" element={<Tasks/>}/>
           </Routes>
         </div>
       </div>

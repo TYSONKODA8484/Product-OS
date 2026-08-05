@@ -5,12 +5,15 @@ import { useUiStore } from '../../store/uiStore'
 const NAV_ITEMS = [
   { id: 'dashboard', path: '/dashboard', label: 'Dashboard', icon: I.Home },
   { id: 'calendar', path: '/calendar', label: 'Calendar', icon: I.Calendar, badge: 4 },
+  { id: 'tasks', path: '/tasks', label: 'Tasks', icon: I.Task },
   { id: 'sprint', path: '/sprint', label: 'Sprint Tracker', icon: I.Check },
   { id: 'pack', path: '/pack', label: 'Pack Dashboard', icon: I.Package },
   { id: 'localization', path: '/localization', label: 'Localization', icon: I.Globe },
   { id: 'notes', path: '/notes', label: 'Notes', icon: I.Note },
   { id: 'ai', path: '/ai', label: 'AI Assistant', icon: I.Chat },
   { id: 'links', path: '/links', label: 'Important Links', icon: I.Link },
+  { id: 'ga', path: '/ga', label: 'GA Implementation', icon: I.Sheet },
+  { id: 'deeplinks', path: '/deeplinks', label: 'Deeplinks', icon: I.External },
 ]
 
 export function Sidebar() {

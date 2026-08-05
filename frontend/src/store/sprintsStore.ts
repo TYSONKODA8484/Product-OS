@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
 export interface Sprint {
   id: string
@@ -15,6 +14,9 @@ export interface Sprint {
   prd: string
 }
 
+export const APPS = ['LightX', 'AI Leap', 'Photocut', 'StyleOn', 'StorYZ', 'Photoshoot']
+
+// Kept for test resets
 export const SPRINTS: Sprint[] = [
   { id: 's1', feature: 'Background remover v2', app: 'LightX', platforms: ['iOS', 'Android'], stage: 'Dev', status: 'Current', eta: 'May 28', blocker: '', jira: 'PROJ-2841', review: 'PROJ-2841-R', prd: 'doc/prd-bg-v2' },
   { id: 's2', feature: 'Onboarding redesign', app: 'AI Leap', platforms: ['iOS'], stage: 'Design', status: 'Current', eta: 'May 24', blocker: 'Waiting on illustrations', jira: 'PROJ-2812', review: '', prd: 'doc/onboard-r2' },
@@ -30,29 +32,74 @@ export const SPRINTS: Sprint[] = [
   { id: 's12', feature: 'Highlight reels', app: 'StorYZ', platforms: ['iOS'], stage: 'Dev', status: 'Current', eta: 'May 30', blocker: 'Video codec issue on iOS 17', jira: 'PROJ-2845', review: '', prd: 'doc/highlight-reels' },
 ]
 
-export const APPS = ['LightX', 'AI Leap', 'Photocut', 'StyleOn', 'StorYZ']
-
 const STATUS_ORDER: Sprint['status'][] = ['Current', 'Next', 'Done']
+const API = '/api/sprints'
 
 interface SprintsState {
   sprints: Sprint[]
-  cycleStatus: (id: string) => void
-  updateSprint: (id: string, patch: Partial<Sprint>) => void
+  loading: boolean
+  fetchSprints: () => Promise<void>
+  cycleStatus: (id: string) => Promise<void>
+  updateSprint: (id: string, patch: Partial<Sprint>) => Promise<void>
+  addSprint: (data: Omit<Sprint, 'id'>) => Promise<Sprint>
+  deleteSprint: (id: string) => Promise<void>
 }
 
-export const useSprintsStore = create<SprintsState>()(
-  persist(
-    (set) => ({
-      sprints: SPRINTS,
-      cycleStatus: (id) => set((s) => ({
-        sprints: s.sprints.map(sp => sp.id === id
-          ? { ...sp, status: STATUS_ORDER[(STATUS_ORDER.indexOf(sp.status) + 1) % 3] }
-          : sp),
-      })),
-      updateSprint: (id, patch) => set((s) => ({
-        sprints: s.sprints.map(sp => sp.id === id ? { ...sp, ...patch } : sp),
-      })),
-    }),
-    { name: 'productos-sprints' }
-  )
-)
+export const useSprintsStore = create<SprintsState>((set, get) => ({
+  sprints: [],
+  loading: false,
+
+  fetchSprints: async () => {
+    set({ loading: true })
+    try {
+      const res = await fetch(API)
+      const sprints: Sprint[] = await res.json()
+      set({ sprints, loading: false })
+    } catch {
+      set({ loading: false })
+    }
+  },
+
+  cycleStatus: async (id) => {
+    const sprint = get().sprints.find(s => s.id === id)
+    if (!sprint) return
+    const nextStatus = STATUS_ORDER[(STATUS_ORDER.indexOf(sprint.status) + 1) % 3]
+    set(s => ({ sprints: s.sprints.map(sp => sp.id === id ? { ...sp, status: nextStatus } : sp) }))
+    try {
+      await fetch(`${API}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus }),
+      })
+    } catch {}
+  },
+
+  updateSprint: async (id, patch) => {
+    set(s => ({ sprints: s.sprints.map(sp => sp.id === id ? { ...sp, ...patch } : sp) }))
+    try {
+      await fetch(`${API}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch),
+      })
+    } catch {}
+  },
+
+  addSprint: async (data) => {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    const sprint: Sprint = await res.json()
+    set(s => ({ sprints: [sprint, ...s.sprints] }))
+    return sprint
+  },
+
+  deleteSprint: async (id) => {
+    set(s => ({ sprints: s.sprints.filter(sp => sp.id !== id) }))
+    try {
+      await fetch(`${API}/${id}`, { method: 'DELETE' })
+    } catch {}
+  },
+}))

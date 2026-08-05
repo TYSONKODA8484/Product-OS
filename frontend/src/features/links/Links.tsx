@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLinksStore } from '../../store/linksStore'
 import type { Link } from '../../store/linksStore'
 import { useToast } from '../../components/ui/Toast'
@@ -55,7 +55,8 @@ function LinkModal({ link, onClose, onSave }: { link: Partial<Link> & { name: st
 }
 
 export function Links() {
-  const { links, saveLink, deleteLink } = useLinksStore()
+  const { links, saveLink, deleteLink, fetchLinks } = useLinksStore()
+  useEffect(() => { fetchLinks() }, [])
   const toast = useToast()
   const [cat, setCat] = useState('All')
   const [q, setQ] = useState('')

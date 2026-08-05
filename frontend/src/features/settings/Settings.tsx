@@ -1,6 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useUiStore } from '../../store/uiStore'
+import { useSettingsStore } from '../../store/settingsStore'
 import { I } from '../../components/ui/Icon'
+
+function initials(name: string) {
+  return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?'
+}
 
 function ToggleSwitch({ defaultOn }: { defaultOn: boolean }) {
   const [on, setOn] = useState(defaultOn)
@@ -22,6 +27,8 @@ function ToggleSwitch({ defaultOn }: { defaultOn: boolean }) {
 
 export function Settings() {
   const { theme, toggleTheme } = useUiStore()
+  const { profile, fetchSettings, updateSettings } = useSettingsStore()
+  useEffect(() => { fetchSettings() }, [])
   return (
     <div className="content" style={{maxWidth: 720}}>
       <div className="page-header">
@@ -50,13 +57,25 @@ export function Settings() {
         <div style={{padding: 16, borderBottom: '1px solid var(--border)'}}>
           <div style={{fontSize: 13, fontWeight: 600, marginBottom: 12}}>Profile</div>
           <div className="row gap-16">
-            <div className="avatar" style={{width: 56, height: 56, fontSize: 18}}>JS</div>
+            <div className="avatar" style={{width: 56, height: 56, fontSize: 18}}>{initials(profile.name)}</div>
             <div style={{flex: 1}}>
-              <div className="field"><label className="label">Display name</label><input className="input" defaultValue="Jordan Singh"/></div>
+              <div className="field">
+                <label className="label">Display name</label>
+                <input className="input" value={profile.name}
+                       onChange={e => updateSettings({ name: e.target.value })}/>
+              </div>
             </div>
           </div>
-          <div className="field"><label className="label">Email</label><input className="input" defaultValue="jordan@productos.app"/></div>
-          <div className="field" style={{marginBottom: 0}}><label className="label">Role</label><input className="input" defaultValue="Senior Product Manager"/></div>
+          <div className="field">
+            <label className="label">Email</label>
+            <input className="input" value={profile.email}
+                   onChange={e => updateSettings({ email: e.target.value })}/>
+          </div>
+          <div className="field" style={{marginBottom: 0}}>
+            <label className="label">Role</label>
+            <input className="input" value={profile.role}
+                   onChange={e => updateSettings({ role: e.target.value })}/>
+          </div>
         </div>
         <div style={{padding: 16}}>
           <div style={{fontSize: 13, fontWeight: 600, marginBottom: 12}}>Notifications</div>

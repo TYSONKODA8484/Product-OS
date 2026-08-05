@@ -1,42 +1,52 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
 export interface CalendarEvent {
   id: string
   date: string
   title: string
-  type: 'sprint' | 'global' | 'manual'
+  type: 'sprint' | 'global' | 'manual' | 'task'
+  note?: string
 }
 
-const SAMPLE_EVENTS: CalendarEvent[] = [
-  { id: 'e1', date: '2026-05-22', title: 'Paywall A/B ships', type: 'sprint' },
-  { id: 'e2', date: '2026-05-24', title: 'Onboarding redesign', type: 'sprint' },
-  { id: 'e3', date: '2026-05-26', title: 'Memorial Day (US)', type: 'global' },
-  { id: 'e4', date: '2026-05-28', title: 'BG remover v2 ETA', type: 'sprint' },
-  { id: 'e5', date: '2026-05-27', title: 'Bulk export QA', type: 'sprint' },
-  { id: 'e6', date: '2026-05-30', title: 'Highlight reels release', type: 'sprint' },
-  { id: 'e7', date: '2026-05-19', title: 'All-hands review', type: 'manual' },
-  { id: 'e8', date: '2026-05-21', title: '1:1 with design lead', type: 'manual' },
-  { id: 'e9', date: '2026-06-05', title: 'Try-on engine kickoff', type: 'sprint' },
-  { id: 'e10', date: '2026-06-09', title: 'Story templates ship', type: 'sprint' },
-  { id: 'e11', date: '2026-06-15', title: "Father's Day (US)", type: 'global' },
-  { id: 'e12', date: '2026-06-19', title: 'Juneteenth (US)', type: 'global' },
-  { id: 'e13', date: '2026-05-20', title: 'Quarterly OKR review', type: 'manual' },
-]
+const API = '/api/calendar'
 
 interface CalendarState {
   events: CalendarEvent[]
-  addEvent: (event: Omit<CalendarEvent, 'id'>) => void
+  loading: boolean
+  fetchEvents: () => Promise<void>
+  addEvent: (event: Omit<CalendarEvent, 'id'>) => Promise<void>
+  deleteEvent: (id: string) => Promise<void>
 }
 
-export const useCalendarStore = create<CalendarState>()(
-  persist(
-    (set) => ({
-      events: SAMPLE_EVENTS,
-      addEvent: (event) => set((s) => ({
-        events: [...s.events, { ...event, id: 'e' + Date.now() }],
-      })),
-    }),
-    { name: 'productos-calendar' }
-  )
-)
+export const useCalendarStore = create<CalendarState>((set) => ({
+  events: [],
+  loading: false,
+
+  fetchEvents: async () => {
+    set({ loading: true })
+    try {
+      const res = await fetch(API)
+      const events: CalendarEvent[] = await res.json()
+      set({ events, loading: false })
+    } catch { set({ loading: false }) }
+  },
+
+  addEvent: async (event) => {
+    const optimistic: CalendarEvent = { ...event, id: 'e' + Date.now() }
+    set(s => ({ events: [...s.events, optimistic] }))
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(event),
+      })
+      const saved: CalendarEvent = await res.json()
+      set(s => ({ events: s.events.map(e => e.id === optimistic.id ? saved : e) }))
+    } catch {}
+  },
+
+  deleteEvent: async (id) => {
+    set(s => ({ events: s.events.filter(e => e.id !== id) }))
+    try { await fetch(`${API}/${id}`, { method: 'DELETE' }) } catch {}
+  },
+}))

@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
 
 export interface Link {
   id: string
@@ -9,37 +8,62 @@ export interface Link {
 }
 
 export const SAMPLE_LINKS: Link[] = [
-  { id: 'l1', name: 'Product Roadmap (Master)', url: 'docs.example.com/p/roadmap-master', cat: 'Docs' },
-  { id: 'l2', name: 'Q3 Planning Sheet', url: 'sheets.example.com/q3-plan', cat: 'Sheets' },
-  { id: 'l3', name: 'JIRA — Active Sprint', url: 'jira.example.com/sprint/active', cat: 'JIRA' },
-  { id: 'l4', name: 'Design System v3', url: 'figma.example.com/ds-v3', cat: 'Designs' },
-  { id: 'l5', name: 'Onboarding Walkthrough Demo', url: 'vid.example.com/onboard-demo', cat: 'Videos' },
-  { id: 'l6', name: 'Engineering Standards', url: 'docs.example.com/eng-standards', cat: 'Docs' },
-  { id: 'l7', name: 'Localization Tracker', url: 'sheets.example.com/loc-tracker', cat: 'Sheets' },
-  { id: 'l8', name: 'JIRA — Backlog', url: 'jira.example.com/backlog', cat: 'JIRA' },
-  { id: 'l9', name: 'User Research Library', url: 'notes.example.com/research', cat: 'Docs' },
-  { id: 'l10', name: 'Brand Asset Library', url: 'figma.example.com/brand', cat: 'Designs' },
-  { id: 'l11', name: 'All-hands recordings', url: 'vid.example.com/all-hands', cat: 'Videos' },
-  { id: 'l12', name: 'Incident postmortems', url: 'docs.example.com/postmortems', cat: 'Other' },
+  { id: 'l1',  name: 'Product Roadmap (Master)',    url: 'docs.example.com/p/roadmap-master', cat: 'Docs'    },
+  { id: 'l2',  name: 'Q3 Planning Sheet',           url: 'sheets.example.com/q3-plan',        cat: 'Sheets'  },
+  { id: 'l3',  name: 'JIRA — Active Sprint',        url: 'jira.example.com/sprint/active',    cat: 'JIRA'    },
+  { id: 'l12', name: 'Incident postmortems',        url: 'docs.example.com/postmortems',      cat: 'Other'   },
 ]
+
+const API = '/api/links'
 
 interface LinksState {
   links: Link[]
-  saveLink: (link: Partial<Link> & { name: string; url: string; cat: string }) => void
-  deleteLink: (id: string) => void
+  loading: boolean
+  fetchLinks: () => Promise<void>
+  saveLink: (link: Partial<Link> & { name: string; url: string; cat: string }) => Promise<void>
+  deleteLink: (id: string) => Promise<void>
 }
 
-export const useLinksStore = create<LinksState>()(
-  persist(
-    (set) => ({
-      links: SAMPLE_LINKS,
-      saveLink: (link) => set((s) => ({
-        links: link.id
-          ? s.links.map(x => x.id === link.id ? { ...x, ...link } as Link : x)
-          : [{ ...link, id: 'l' + Date.now() } as Link, ...s.links],
-      })),
-      deleteLink: (id) => set((s) => ({ links: s.links.filter(l => l.id !== id) })),
-    }),
-    { name: 'productos-links' }
-  )
-)
+export const useLinksStore = create<LinksState>((set) => ({
+  links: [],
+  loading: false,
+
+  fetchLinks: async () => {
+    set({ loading: true })
+    try {
+      const res = await fetch(API)
+      const links: Link[] = await res.json()
+      set({ links, loading: false })
+    } catch { set({ loading: false }) }
+  },
+
+  saveLink: async (link) => {
+    if (link.id) {
+      set(s => ({ links: s.links.map(x => x.id === link.id ? { ...x, ...link } as Link : x) }))
+      try {
+        await fetch(`${API}/${link.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(link),
+        })
+      } catch {}
+    } else {
+      const optimistic: Link = { ...link, id: 'l' + Date.now() } as Link
+      set(s => ({ links: [optimistic, ...s.links] }))
+      try {
+        const res = await fetch(API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(link),
+        })
+        const saved: Link = await res.json()
+        set(s => ({ links: s.links.map(x => x.id === optimistic.id ? saved : x) }))
+      } catch {}
+    }
+  },
+
+  deleteLink: async (id) => {
+    set(s => ({ links: s.links.filter(l => l.id !== id) }))
+    try { await fetch(`${API}/${id}`, { method: 'DELETE' }) } catch {}
+  },
+}))

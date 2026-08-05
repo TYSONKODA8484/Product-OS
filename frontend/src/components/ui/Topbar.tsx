@@ -8,6 +8,7 @@ const PAGE_LABELS: Record<string, string> = {
   dashboard: 'Dashboard', calendar: 'Calendar', sprint: 'Sprint Tracker',
   pack: 'Pack Dashboard', localization: 'Localization', notes: 'Notes',
   ai: 'AI Assistant', links: 'Important Links', settings: 'Settings',
+  ga: 'GA Implementation', deeplinks: 'Deeplinks',
 }
 
 export function Topbar() {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { usePackStore, TAG_DEFS, SHEETS } from '../../store/packStore'
 import type { PackRow } from '../../store/packStore'
 import { useToast } from '../../components/ui/Toast'
@@ -162,9 +162,11 @@ function PackEditDrawer({ row, onClose, onUpdate }: { row: PackRow; onClose: () 
 }
 
 export function Pack() {
-  const { rows, updateRow } = usePackStore()
+  const { rows, updateRow, fetchRows } = usePackStore()
   const toast = useToast()
   const [sheetId, setSheetId] = useState('product')
+
+  useEffect(() => { fetchRows() }, [])
   const [q, setQ] = useState('')
   const [tagFilter, setTagFilter] = useState<string[]>([])
   const [editId, setEditId] = useState<string | null>(null)

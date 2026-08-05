@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSprintsStore, APPS } from '../../store/sprintsStore'
 import type { Sprint as SprintType } from '../../store/sprintsStore'
 import { useToast } from '../../components/ui/Toast'
@@ -42,18 +42,43 @@ function PriorityFlag({ blocker }: { blocker: string }) {
 
 function appColor(name: string) {
   const colors: Record<string, string> = {
-    LightX: '#378ADD', 'AI Leap': '#1D9E75', Photocut: '#BA7517', StyleOn: '#9B5DE5', StorYZ: '#E15D7E',
+    LightX: '#378ADD', 'AI Leap': '#1D9E75', Photocut: '#BA7517', StyleOn: '#9B5DE5', StorYZ: '#E15D7E', Photoshoot: '#444441',
   }
   return colors[name] || '#444441'
+}
+
+function jiraLabel(jira: string): string {
+  if (!jira) return '—'
+  try {
+    const parts = new URL(jira).pathname.split('/').filter(Boolean)
+    return parts[parts.length - 1] || jira
+  } catch {
+    return jira
+  }
+}
+
+function openLink(url: string) {
+  if (!url) return
+  window.open(url.startsWith('http') ? url : `https://andorcom.atlassian.net/browse/${url}`, '_blank', 'noopener')
 }
 
 function FilterMenu({ label, icon, options, selected, onToggle }: {
   label: string; icon: React.ReactNode; options: string[]; selected: string[]; onToggle: (v: string) => void
 }) {
   const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
   const cnt = selected.length
+
+  useEffect(() => {
+    const fn = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', fn)
+    return () => document.removeEventListener('mousedown', fn)
+  }, [])
+
   return (
-    <div className="filter-menu">
+    <div className="filter-menu" ref={ref}>
       <button className={`btn sm ${cnt ? 'primary' : 'ghost'}`} onClick={() => setOpen(o => !o)}
               style={cnt ? {background: 'var(--blue-soft)', color: 'var(--blue-dark)', borderColor: 'transparent'} : {}}>
         {icon}<span>{label}</span>
@@ -80,7 +105,12 @@ function SprintRow({ s, onOpen, onCycleStatus }: { s: SprintType; onOpen: () => 
       <button className="sprint-status-btn" onClick={e => onCycleStatus(s.id, e)} title={`Status: ${s.status} (click to cycle)`}>
         <StatusGlyph status={s.status}/>
       </button>
-      <span className="sprint-id mono">{s.jira}</span>
+      <span className="sprint-id"
+            onClick={e => { e.stopPropagation(); if (s.jira) openLink(s.jira) }}
+            style={{ cursor: s.jira ? 'pointer' : 'default' }}
+            title={s.jira ? `Open ${jiraLabel(s.jira)} in Jira` : s.app}>
+        {s.app}
+      </span>
       <span className="sprint-app-dot" style={{background: appColor(s.app)}} title={s.app}/>
       <span className="sprint-feat">{s.feature}</span>
       <div className="sprint-row-spacer"/>
@@ -97,9 +127,13 @@ function SprintRow({ s, onOpen, onCycleStatus }: { s: SprintType; onOpen: () => 
   )
 }
 
-function SprintDrawer({ sprint, onClose, onUpdate }: { sprint: SprintType; onClose: () => void; onUpdate: (patch: Partial<SprintType>) => void }) {
-  const toast = useToast()
-  const change = (patch: Partial<SprintType>) => { onUpdate(patch); toast('Saved') }
+function SprintDrawer({ sprint, onClose, onUpdate, onDelete }: {
+  sprint: SprintType
+  onClose: () => void
+  onUpdate: (patch: Partial<SprintType>) => void
+  onDelete: () => void
+}) {
+  const change = (patch: Partial<SprintType>) => { onUpdate(patch) }
   return (
     <>
       <div className="drawer-overlay" onClick={onClose}/>
@@ -109,7 +143,12 @@ function SprintDrawer({ sprint, onClose, onUpdate }: { sprint: SprintType; onClo
             <StatusGlyph status={sprint.status}/>
             <div>
               <h3 style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                <span className="mono" style={{fontSize: 11.5, color: 'var(--text-subtle)', fontWeight: 500}}>{sprint.jira}</span>
+                {sprint.jira && (
+                  <span className="mono" style={{fontSize: 11.5, color: 'var(--text-subtle)', fontWeight: 500, cursor: 'pointer'}}
+                        onClick={() => openLink(sprint.jira)} title="Open in Jira">
+                    {jiraLabel(sprint.jira)}
+                  </span>
+                )}
                 {sprint.feature}
               </h3>
               <div style={{fontSize: 11.5, color: 'var(--text-muted)', marginTop: 2}}>
@@ -169,22 +208,22 @@ function SprintDrawer({ sprint, onClose, onUpdate }: { sprint: SprintType; onClo
           <div className="field">
             <label className="label">JIRA Sprint link</label>
             <div className="row" style={{gap: 6}}>
-              <input className="input" value={sprint.jira} onChange={e => change({ jira: e.target.value })}/>
-              <button className="icon-btn"><I.External size={14}/></button>
+              <input className="input" placeholder="https://… or ticket ID" value={sprint.jira} onChange={e => change({ jira: e.target.value })}/>
+              <button className="icon-btn" onClick={() => openLink(sprint.jira)} disabled={!sprint.jira} title="Open in Jira"><I.External size={14}/></button>
             </div>
           </div>
           <div className="field">
             <label className="label">Product Review link</label>
             <div className="row" style={{gap: 6}}>
               <input className="input" value={sprint.review} placeholder="paste JIRA review link" onChange={e => change({ review: e.target.value })}/>
-              <button className="icon-btn"><I.External size={14}/></button>
+              <button className="icon-btn" onClick={() => openLink(sprint.review)} disabled={!sprint.review} title="Open review"><I.External size={14}/></button>
             </div>
           </div>
           <div className="field">
             <label className="label">PRD link</label>
             <div className="row" style={{gap: 6}}>
               <input className="input" value={sprint.prd} onChange={e => change({ prd: e.target.value })}/>
-              <button className="icon-btn"><I.External size={14}/></button>
+              <button className="icon-btn" onClick={() => openLink(sprint.prd)} disabled={!sprint.prd} title="Open PRD"><I.External size={14}/></button>
             </div>
           </div>
         </div>
@@ -192,7 +231,7 @@ function SprintDrawer({ sprint, onClose, onUpdate }: { sprint: SprintType; onClo
           <div style={{flex: 1, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-muted)'}}>
             <I.Check size={12} style={{color: 'var(--teal)'}}/> Auto-saving
           </div>
-          <button className="btn danger"><I.Trash size={13}/> Archive</button>
+          <button className="btn danger" onClick={onDelete}><I.Trash size={13}/> Delete</button>
           <button className="btn primary" onClick={onClose}>Done</button>
         </div>
       </div>
@@ -200,14 +239,112 @@ function SprintDrawer({ sprint, onClose, onUpdate }: { sprint: SprintType; onClo
   )
 }
 
+function NewSprintDrawer({ onClose, onCreate }: {
+  onClose: () => void
+  onCreate: (data: Omit<SprintType, 'id'>) => void
+}) {
+  const [draft, setDraft] = useState<Omit<SprintType, 'id'>>({
+    feature: '', app: APPS[0], platforms: [], stage: 'Design',
+    status: 'Current', eta: '', blocker: '', jira: '', review: '', prd: '',
+  })
+  const change = (patch: Partial<Omit<SprintType, 'id'>>) => setDraft(d => ({ ...d, ...patch }))
+  const handleCreate = () => {
+    if (!draft.feature.trim()) return
+    onCreate(draft)
+    onClose()
+  }
+  return (
+    <>
+      <div className="drawer-overlay" onClick={onClose}/>
+      <div className="drawer">
+        <div className="modal-head">
+          <h3>New Sprint</h3>
+          <button className="icon-btn" onClick={onClose}><I.X/></button>
+        </div>
+        <div style={{padding: '20px 22px', flex: 1, overflow: 'auto'}}>
+          <div className="field">
+            <label className="label">Feature name <span style={{color: 'var(--amber)'}}>*</span></label>
+            <input className="input" placeholder="e.g. Background remover v3" autoFocus
+                   value={draft.feature} onChange={e => change({ feature: e.target.value })}
+                   onKeyDown={e => e.key === 'Enter' && handleCreate()}/>
+          </div>
+          <div className="row gap-12">
+            <div className="field" style={{flex: 1}}>
+              <label className="label">App</label>
+              <select className="select" value={draft.app} onChange={e => change({ app: e.target.value })}>
+                {APPS.map(a => <option key={a}>{a}</option>)}
+              </select>
+            </div>
+            <div className="field" style={{flex: 1}}>
+              <label className="label">Stage</label>
+              <select className="select" value={draft.stage} onChange={e => change({ stage: e.target.value as SprintType['stage'] })}>
+                {['Design','Product','Dev','QA','Done'].map(s => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="field">
+            <label className="label">Platform</label>
+            <div className="chip-row">
+              {['iOS','Android','Web'].map(p => (
+                <div key={p} className={`chip ${draft.platforms.includes(p) ? 'active' : ''}`}
+                     onClick={() => change({ platforms: draft.platforms.includes(p) ? draft.platforms.filter(x => x !== p) : [...draft.platforms, p] })}>
+                  {p}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="row gap-12">
+            <div className="field" style={{flex: 1}}>
+              <label className="label">Status</label>
+              <select className="select" value={draft.status} onChange={e => change({ status: e.target.value as SprintType['status'] })}>
+                {['Current','Next','Done'].map(s => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+            <div className="field" style={{flex: 1}}>
+              <label className="label">ETA</label>
+              <input className="input" placeholder="e.g. Jul 10" value={draft.eta} onChange={e => change({ eta: e.target.value })}/>
+            </div>
+          </div>
+          <div className="field">
+            <label className="label">Blocker / Notes</label>
+            <textarea className="textarea" placeholder="Any blockers or notes…"
+                      value={draft.blocker} onChange={e => change({ blocker: e.target.value })}/>
+          </div>
+          <div className="field">
+            <label className="label">JIRA link</label>
+            <input className="input" placeholder="PROJ-XXXX" value={draft.jira} onChange={e => change({ jira: e.target.value })}/>
+          </div>
+          <div className="field">
+            <label className="label">Product Review link</label>
+            <input className="input" placeholder="paste JIRA review link" value={draft.review} onChange={e => change({ review: e.target.value })}/>
+          </div>
+          <div className="field">
+            <label className="label">PRD link</label>
+            <input className="input" placeholder="doc/prd-link" value={draft.prd} onChange={e => change({ prd: e.target.value })}/>
+          </div>
+        </div>
+        <div className="modal-foot">
+          <button className="btn ghost" onClick={onClose}>Cancel</button>
+          <button className="btn primary" onClick={handleCreate} disabled={!draft.feature.trim()}>
+            <I.Plus size={13}/> Create Sprint
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}
+
 export function Sprint() {
-  const { sprints, cycleStatus, updateSprint } = useSprintsStore()
+  const { sprints, loading, cycleStatus, updateSprint, addSprint, deleteSprint, fetchSprints } = useSprintsStore()
   const toast = useToast()
   const [filters, setFilters] = useState({ platform: [] as string[], apps: [] as string[], stage: [] as string[], status: [] as string[] })
   const [grouping, setGrouping] = useState('status')
   const [open, setOpen] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [q, setQ] = useState('')
+
+  useEffect(() => { fetchSprints() }, [])
 
   const toggle = (group: keyof typeof filters, val: string) => setFilters(f => ({
     ...f,
@@ -244,6 +381,17 @@ export function Sprint() {
     toast('Status updated')
   }
 
+  const handleCreate = async (data: Omit<SprintType, 'id'>) => {
+    await addSprint(data)
+    toast('Sprint created')
+  }
+
+  const handleDelete = async (id: string) => {
+    await deleteSprint(id)
+    setOpen(null)
+    toast('Sprint deleted')
+  }
+
   return (
     <div className="content" style={{padding: '16px 24px'}}>
       <div className="row" style={{justifyContent: 'space-between', marginBottom: 12}}>
@@ -253,7 +401,7 @@ export function Sprint() {
         </div>
         <div className="row" style={{gap: 6}}>
           <button className="btn ghost sm"><I.Download size={13}/> Export</button>
-          <button className="btn primary sm"><I.Plus size={13}/> New sprint</button>
+          <button className="btn primary sm" onClick={() => setCreating(true)}><I.Plus size={13}/> New sprint</button>
         </div>
       </div>
 
@@ -289,8 +437,11 @@ export function Sprint() {
       </div>
 
       <div className="sprint-list">
-        {groups.length === 0 && (
-          <div className="card empty"><I.Search size={28}/><div className="e-title">No sprints match</div><div className="e-sub">Clear filters or adjust your search.</div></div>
+        {loading && sprints.length === 0 && (
+          <div className="card empty" style={{color: 'var(--text-muted)', fontSize: 13}}>Loading sprints…</div>
+        )}
+        {!loading && groups.length === 0 && (
+          <div className="card empty"><I.Search size={28}/><div className="e-title">No sprints match</div><div className="e-sub">Clear filters or add a new sprint.</div></div>
         )}
         {groups.map(g => {
           const isCollapsed = collapsed[g.key]
@@ -307,7 +458,7 @@ export function Sprint() {
                   <span style={{fontWeight: 600, fontSize: 12.5}}>{label}</span>
                   <span style={{fontSize: 11.5, color: 'var(--text-subtle)'}}>{g.items.length}</span>
                 </span>
-                <button className="btn ghost sm" onClick={e => e.stopPropagation()} style={{padding: '2px 6px'}}>
+                <button className="btn ghost sm" onClick={e => { e.stopPropagation(); setCreating(true) }} style={{padding: '2px 6px'}}>
                   <I.Plus size={12}/>
                 </button>
               </header>
@@ -328,6 +479,14 @@ export function Sprint() {
           sprint={sprints.find(s => s.id === open) ?? sprints[0]}
           onClose={() => setOpen(null)}
           onUpdate={patch => updateSprint(open, patch)}
+          onDelete={() => handleDelete(open)}
+        />
+      )}
+
+      {creating && (
+        <NewSprintDrawer
+          onClose={() => setCreating(false)}
+          onCreate={handleCreate}
         />
       )}
     </div>

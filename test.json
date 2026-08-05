@@ -1,0 +1,325 @@
+{
+  "_id": "69ca4553175bff39d1b25a49",
+  "appname": "lightx",
+  "imageTools": [
+    {
+      "toolName": "Try-On",
+      "key": "try_on",
+      "inputType": "1_input",
+      "modelId": 75,
+      "categoryId": 330,
+      "featureType": "aitryon",
+      "isIosAvailable": true,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "For the best results, use a photo with plain or patterned textures in natural light against a simple background abc",
+        "info": "We're improving quality and speed! Thank you for supportabc",
+        "cta": "Upload Product",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Product Image"
+    },
+    {
+      "toolName": "Product PhotoShoot",
+      "key": "product_photoshoot",
+      "inputType": "1_input",
+      "modelId": 68,
+      "categoryId": 224,
+      "featureType": "photoshoot",
+      "isIosAvailable": true,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload a clear photo of your product placed against a simple background with good lighting. Avoid busy scenes so the product stands out clearly.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Product",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Product Image"
+    },
+    {
+      "toolName": "MockUp",
+      "key": "mockup",
+      "inputType": "1_input",
+      "modelId": 76,
+      "categoryId": 331,
+      "featureType": "aimockup",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload a clean, high-resolution design with correct proportions and clear edges. Avoid screenshots, shadows, or complex backgrounds.",
+        "info": "We're improving quality and speed! Thank you abc.",
+        "cta": "Upload Design",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Replace Design"
+    },
+    {
+      "toolName": "Space Design",
+      "key": "space_design",
+      "inputType": "1_input",
+      "modelId": 68,
+      "categoryId": 332,
+      "featureType": "ai_space_design",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload a well-lit photo of the room or space you want to redesign. For best results, keep the scene tidy and fully visible.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Photo",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Room Image"
+    },
+    {
+      "toolName": "Solo Photoshoot",
+      "key": "solo_photoshoot",
+      "inputType": "1_input",
+      "modelId": 67,
+      "categoryId": 283,
+      "featureType": "modelphotoshoot",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload a clear, front-facing photo of one person in good lighting with a simple background. Avoid filters, blur, or partially visible faces.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Photo",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Person Image"
+    },
+    {
+      "toolName": "Duo Photoshoot",
+      "key": "duo_photoshoot",
+      "inputType": "2_input",
+      "modelId": 67,
+      "categoryId": 276,
+      "featureType": "aiduoshoot",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload two clear, front-facing photos of people in good lighting and simple backgrounds. Make sure faces are fully visible and not covered.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Photos",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Person Image"
+    }
+  ],
+  "videoTools": [
+    {
+      "toolName": "Solo VideoShoot",
+      "key": "solo_videoshoot",
+      "inputType": "1_input",
+      "modelId": 71,
+      "categoryId": 312,
+      "featureType": "imageanimate",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload a clear, front-facing photo of one person in good lighting with a simple background. Avoid filters, blur, or partially visible faces.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Photo",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Person Image"
+    },
+    {
+      "toolName": "Duo VideoShoot",
+      "key": "duo_videoshoot",
+      "inputType": "2_input",
+      "modelId": 74,
+      "categoryId": 313,
+      "featureType": "duoimageanimate",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload two clear, front-facing photos of people in good lighting and simple backgrounds. Make sure faces are fully visible and not covered.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Photos",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Person Image"
+    },
+    {
+      "toolName": "Product VideoShoot",
+      "key": "product_videoshoot",
+      "inputType": "1_input",
+      "modelId": 70,
+      "categoryId": 327,
+      "featureType": "keyframevideoshoot",
+      "isIosAvailable": false,
+      "isAndroidAvailable": false,
+      "metaData": {
+        "title": "Recommended",
+        "subtitle": "Upload a clear photo of your product placed against a simple background with good lighting. Avoid busy scenes so the product stands out clearly.",
+        "info": "We're improving quality and speed! Thank you.",
+        "cta": "Upload Product",
+        "productImage": [
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8e3cf956-e027-4ea7-bc56-18dd1edcef7b.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/a504a6ef-14f2-4e26-a1eb-c123da300647.jpg",
+          "https://d2v5dzhdg4zhx3.cloudfront.net/graphics/8f8d8bc5-b47b-4fb1-b776-da770a9f4cd8.jpg"
+        ]
+      },
+      "uploadText": "Product Image"
+    }
+  ],
+  "imageEdit": [
+    {
+      "modelId": 67,
+      "categoryId": 360,
+      "featureType": "aibackdrop",
+      "headerToast": "AI Backdrop",
+      "placeholder": "Describe the Background",
+      "imageCutout": false
+    },
+    {
+      "modelId": 67,
+      "categoryId": 376,
+      "featureType": "aicutout",
+      "headerToast": "AI Background",
+      "placeholder": "Describe the Background",
+      "imageCutout": false
+    },
+    {
+      "modelId": 67,
+      "categoryId": 377,
+      "featureType": "aieraser",
+      "headerToast": "AI Background",
+      "placeholder": "Describe the Background",
+      "imageCutout": false
+    },
+    {
+      "modelId": 67,
+      "categoryId": 382,
+      "featureType": "aiobject",
+      "headerToast": "AI Background",
+      "placeholder": "Describe the Background",
+      "imageCutout": false
+    },
+    {
+      "modelId": 66,
+      "categoryId": 361,
+      "featureType": "aiface",
+      "headerToast": "AI Face Enhance",
+      "placeholder": "Describe the Face enhancement",
+      "imageCutout": false
+    },
+    {
+      "modelId": 66,
+      "categoryId": 358,
+      "featureType": "aifilterv2",
+      "headerToast": "AI Filter",
+      "placeholder": "Describe the Filter",
+      "imageCutout": false
+    },
+    {
+      "modelId": 6,
+      "categoryId": 373,
+      "featureType": "aimagiccutout",
+      "headerToast": "AI Background",
+      "placeholder": "Describe the Background",
+      "imageCutout": false
+    },
+    {
+      "modelId": 66,
+      "categoryId": 375,
+      "featureType": "aieffects",
+      "headerToast": "AI Effects",
+      "placeholder": "Describe the Effects",
+      "imageCutout": false
+    },
+    {
+      "modelId": 66,
+      "categoryId": 359,
+      "featureType": "aibody",
+      "headerToast": "AI Body",
+      "placeholder": "Describe the Body curves",
+      "imageCutout": false
+    },
+    {
+      "modelId": 66,
+      "categoryId": 349,
+      "featureType": "photoshoot",
+      "headerToast": "AI Background",
+      "placeholder": "Describe the Background",
+      "imageCutout": false
+    }
+  ],
+  "gaNames": [
+    {
+      "toolGAName": "ai_product_photoshoot",
+      "primaryCategoryId": 224,
+      "subCategoryId": [316, 318, 319, 320, 317, 321, 322, 324, 325, 326, 323]
+    },
+    {
+      "toolGAName": "ai_try_on",
+      "primaryCategoryId": 330,
+      "subCategoryId": [333, 334, 336, 366, 335]
+    },
+    {
+      "toolGAName": "ai_mockup",
+      "primaryCategoryId": 331,
+      "subCategoryId": [339, 337, 352, 338, 355, 356, 357]
+    },
+    {
+      "toolGAName": "ai_person_photoshoot",
+      "primaryCategoryId": 283,
+      "subCategoryId": []
+    },
+    {
+      "toolGAName": "ai_duo_photoshoot",
+      "primaryCategoryId": 276,
+      "subCategoryId": []
+    },
+    {
+      "toolGAName": "ai_person_videoshoot",
+      "primaryCategoryId": 312,
+      "subCategoryId": []
+    },
+    {
+      "toolGAName": "ai_duo_videoshoot",
+      "primaryCategoryId": 313,
+      "subCategoryId": []
+    }
+  ]
+}
